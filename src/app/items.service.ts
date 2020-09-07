@@ -1,61 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Item } from './item'
-import { Items } from './mock-items'
-
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getItems(): Item[] {
-    return Items;
-  }
+  getItems(count: number, btn?: string) {
+    if (btn) {
+      if (btn == "launchTrue") {
 
-  getItem(id: number): Observable<Item> {
-    console.log("in service getHero function", id);
-    return of(Items.find(item => item.id === id));
-  }
+        return this.http.get(`https://api.spacexdata.com/v3/launches?limit=${count}&amp;launch_success=true`);
+      } else if (btn == "launchFalse") {
 
-  cartArray = []
-
-  addToCart(item: Item): Observable<Item[]> {
-
-    if (this.cartArray.length == 0) {
-      this.cartArray.push(item);
-    }
-
-    var idArray = [];
-
-    for (var i = 0; i < this.cartArray.length; i++) {
-      if (idArray.indexOf(this.cartArray[i].id) == -1) {
-        idArray.push(this.cartArray[i].id)
+        return this.http.get(`https://api.spacexdata.com/v3/launches?limit=${count}&amp;launch_success=false`);
       }
-    }
-
-    //item already exists in cartArray, don't push rather update quantity count
-    if (idArray.indexOf(item.id) == -1) {
-      console.log("item successfully got pushed to idArray", idArray);
-      item.count = item.count + 1;
-      this.cartArray.push(item);
     } else {
-      //this else executes when user clicks on add to cart for the second time and so on, item quantity count key should be updated
-      //for that find item in cartArray and push 
-      for (var i=0; i < this.cartArray.length; i++) {
-       if (this.cartArray[i].id == item.id) {
-        this.cartArray[i].count = this.cartArray[i].count + 1;
-       }
-      } 
+      return this.http.get(`https://api.spacexdata.com/v3/launches?limit=${count}`)
     }
-
-    console.log("cartArray after push", this.cartArray);
-    return of(this.cartArray);
-  }
-
-  getCartList() :Observable<Item[]> {
-    return of(this.cartArray)
   }
 }

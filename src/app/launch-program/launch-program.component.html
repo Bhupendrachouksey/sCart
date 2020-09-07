@@ -1,0 +1,48 @@
+<div class="container">
+  <header>
+    <h2>SpaceX Launch Program</h2>
+  </header>
+  <div class="inner-container">
+
+    <div class="card1">
+      <div>
+        <strong>Filters</strong>
+      </div>
+      <h4 class="card-body">Launch Year</h4>
+      <div *ngFor="let year of years;">
+        <button class="btn">{{year}}</button>
+      </div>
+      <div>
+        <h4 class="card-body"> Successful Launch </h4>
+        <button class="btn" (click)="onSelect('launchTrue')">True</button>
+        <button class="btn" (click)="onSelect('launchTrue')">False</button>
+      </div>
+      <div>
+        <h4 class="card-body"> Successful Landing </h4>
+
+        <button class="btn">True</button>
+        <button class="btn">False</button>
+      </div>
+    </div>
+    <div class="card2" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()">
+      <div class="card-container" *ngFor="let launch of items$" [routerLink]="['/']">
+        <img img height="165px" class="card-header" src={{launch.links.mission_patch}} alt="mission img">
+        <div class="card-header-text">
+          {{ launch.mission_name }} #{{launch.flight_number}}
+        </div>
+        <div class="card-body-text">
+          <p>
+            Mission Ids:: <b>{{ launch.mission_id }} </b>
+            <br>
+            Launch Year: <b>{{ launch.launch_year }}</b>
+            <br>
+            Successful Launch: <b>{{ launch.launch_success}}</b>
+            <br>
+            Successful Landings: <b>{{ launch.rocket.first_stage.cores[0].land_success }}</b>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
